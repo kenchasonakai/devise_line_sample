@@ -1,5 +1,4 @@
 name: Merge main into develop via Pull Request
-
 on:
   push:
     branches:
@@ -20,12 +19,10 @@ jobs:
 
       - name: Create PullRequest
         run: |
-          gh pr list --base develop --head main --state open --json number -q '. | length' > pr_count.txt
-          PR_COUNT=$(cat pr_count.txt)
+          PR_COUNT=$(gh pr list --base develop --head main --state open --json number -q '. | length')
           if [ "$PR_COUNT" -eq 0 ]; then
             gh pr create --base develop --head main --title "Merge main into develop" --body "mainの内容をdevelopに取り込みます"
           fi
-
       - name: Merge PullRequest
         run: |
           PR_NUMBER=$(gh pr list --base develop --head main --state open --json number -q '.[0].number')
