@@ -1,42 +1,4 @@
-# name: Merge main into develop via Pull Request
-# on:
-#   push:
-#     branches:
-#       - main
-# permissions:
-#   contents: write
-#   pull-requests: write
-# jobs:
-#   merge_main_into_develop:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: リポジトリをチェックアウト
-#         uses: actions/checkout@v3
-#       - name: GitHub CLI をセットアップ
-#         uses: actions/setup-gh@v3
-#       - name: プルリクエストを作成
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         run: |
-#           # 既存の同じPRがないか確認
-#           gh pr list --base develop --head main --state open --json number -q '. | length' > pr_count.txt
-#           PR_COUNT=$(cat pr_count.txt)
-#           if [ "$PR_COUNT" -eq 0 ]; then
-#             # プルリクエストを作成
-#             gh pr create --base develop --head main --title "Merge main into develop" --body "自動マージのためのプルリクエストです。"
-#           fi
-#       - name: プルリクエストをマージ
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         run: |
-#           # プルリクエスト番号を取得
-#           PR_NUMBER=$(gh pr list --base develop --head main --state open --json number -q '.[0].number')
-#           # プルリクエストをマージ
-#           if [ -n "$PR_NUMBER" ]; then
-#             gh pr merge $PR_NUMBER --merge --admin --comment "自動マージを実行しました。"
-#           fi
 name: Merge main into develop via Pull Request
-
 on:
   push:
     branches:
@@ -49,32 +11,21 @@ permissions:
 jobs:
   merge_main_into_develop:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: リポジトリをチェックアウト
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: GitHub CLI をセットアップ
-        uses: actions/setup-gh@v3
-
-      - name: プルリクエストを作成
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create PullRequest
         run: |
-          # 既存の同じPRがないか確認
-          gh pr list --base develop --head main --state open --json number -q '. | length' > pr_count.txt
-          PR_COUNT=$(cat pr_count.txt)
+          PR_COUNT=$(gh pr list --base develop --head main --state open --json number -q '. | length')
           if [ "$PR_COUNT" -eq 0 ]; then
-            # プルリクエストを作成
-            gh pr create --base develop --head main --title "Merge main into develop" --body "自動マージのためのプルリクエストです。"
+            gh pr create --base develop --head main --title "Merge main into develop" --body "mainの内容をdevelopに取り込みます"
           fi
-
-      - name: プルリクエストをマージ
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge PullRequest
         run: |
-          # プルリクエスト番号を取得
           PR_NUMBER=$(gh pr list --base develop --head main --state open --json number -q '.[0].number')
-          # プルリクエストをマージ
           if [ -n "$PR_NUMBER" ]; then
-            gh pr merge $PR_NUMBER --merge --admin --comment "自動マージを実行しました。"
+            gh pr merge $PR_NUMBER --merge --admin
           fi
