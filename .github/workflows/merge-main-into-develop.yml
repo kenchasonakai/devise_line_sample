@@ -26,11 +26,6 @@ jobs:
             gh pr create --base develop --head main --title "Merge main into develop" --body "mainの内容をdevelopに取り込みます"
           fi
 
-      - name: Approve PR
-        run: |
-          PR_NUMBER=$(gh pr list --base develop --head main --state open --json number -q '.[0].number')
-          gh pr review "$PR_NUMBER" --approve
-
       - name: Merge PullRequest
         run: |
           PR_NUMBER=$(gh pr list --base develop --head main --state open --json number -q '.[0].number')
