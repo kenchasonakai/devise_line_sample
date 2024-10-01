@@ -29,7 +29,7 @@ jobs:
       - name: Approve PR
         run: |
           PR_NUMBER=$(gh pr list --base develop --head main --state open --json number -q '.[0].number')
-          gh pr review "$PR_URL" --approve
+          gh pr review "$PR_NUMBER" --approve
 
       - name: Merge PullRequest
         run: |
