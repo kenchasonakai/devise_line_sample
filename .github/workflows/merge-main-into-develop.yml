@@ -53,9 +53,6 @@ jobs:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v3
 
-      - name: GitHub CLI をセットアップ
-        uses: actions/setup-gh@v3
-
       - name: プルリクエストを作成
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
