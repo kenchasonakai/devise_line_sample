@@ -30,6 +30,6 @@ class User < ApplicationRecord
   end
 
   def email_required?
-    (provider.empty? || !email.blank?) && super
+    (provider.blank? || !email.blank?) && super
   end
 end
