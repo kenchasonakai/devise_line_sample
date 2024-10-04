@@ -74,6 +74,6 @@ gem "sidekiq", "~> 7.3"
 
 gem "sidekiq-scheduler"
 
-gem 'omniauth-auth0', '~> 3.0'
+gem "omniauth-auth0", "~> 3.0"
 
-gem 'omniauth-rails_csrf_protection', '~> 1.0'
+gem "omniauth-rails_csrf_protection", "~> 1.0"
